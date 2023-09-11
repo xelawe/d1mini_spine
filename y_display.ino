@@ -8,7 +8,7 @@ void init_display() {
   // Show initial display buffer contents on the screen --
   // the library initializes this with an Adafruit splash screen.
   display.display();
-  delay(2000); // Pause for 2 seconds
+  delay(500); // Pause for 2 seconds
 
   // Clear the buffer
   display.clearDisplay();
@@ -39,15 +39,19 @@ void show_weight( ) {
   display.setTextSize(1);             // Normal 2x pixel scale
   display.setTextColor(SSD1306_WHITE);        // Draw white text
   display.print(Reading [LastRead][0], 1);
+  display.print("g");
   display.print(" <--<< ");
-  display.println(Reading [LastRead][1], 1);
+  display.print(Reading [LastRead][1], 1);
+  display.println("g");
 
   display.setTextSize(2);
   float tot_weight = Reading [LastRead][0] + Reading [LastRead][1];
-  display.println(tot_weight, 1);
+  display.print(tot_weight, 1);
+  display.println("g");
 
+  display.print("Spine ");
   Spine = ConvertForceToSpine (Force, SpineMethodology, false);
-  display.println(Spine,0);
+  display.println(Spine, 0);
 
   display.display();
 }

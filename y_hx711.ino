@@ -2,7 +2,7 @@ void init_hx711() {
 
   for (int Cell = 0; Cell < CELLS; Cell++)
   {
-    Serial.print("========= ");
+    Serial.print("====== Cell ");
     Serial.print(Cell);
     Serial.println(" =========");
 
@@ -15,48 +15,39 @@ void init_hx711() {
     for (int Read = 0; Read < CELLREADS; Read++)
       Reading [Read][Cell] = 0;
 
-//    Serial.println("Before setting up the scale:");
-//    Serial.print("read: \t\t");
-//    Serial.println(ArrowScale [Cell].read());      // print a raw reading from the ADC
-//    print_dot( );
-//    Serial.print("read average: \t\t");
-//    Serial.println(ArrowScale [Cell].read_average(20));   // print the average of 20 readings from the ADC
-//    print_dot( );
-//    Serial.print("get value: \t\t");
-//    Serial.println(ArrowScale [Cell].get_value(5));   // print the average of 5 readings from the ADC minus the tare weight (not set yet)
-//    print_dot( );
-//    Serial.print("get units: \t\t");
-//    Serial.println(ArrowScale [Cell].get_units(5), 1);  // print the average of 5 readings from the ADC minus tare weight (not set) divided
-//    // by the SCALE parameter (not set yet)
     print_dot( );
 
     ArrowScale [Cell].set_scale(scale_f[Cell]);                      // this value is obtained by calibrating the scale with known weights; see the README for details
-    ArrowScale [Cell].tare();               // reset the scale to 0
+    
+    cell_Tare(Cell);            // reset the scale to 0
 
     Serial.println("After setting up the scale:");
 
-//    Serial.print("read: \t\t");
-//    Serial.println(ArrowScale [Cell].read());                 // print a raw reading from the ADC
-//    print_dot( );
-//    Serial.print("read average: \t\t");
-//    Serial.println(ArrowScale [Cell].read_average(20));       // print the average of 20 readings from the ADC
-//    print_dot( );
-//    Serial.print("get value: \t\t");
-//    Serial.println(ArrowScale [Cell].get_value(5));   // print the average of 5 readings from the ADC minus the tare weight, set with tare()
-//    print_dot( );
     Serial.print("get units: \t\t");
     Serial.println(ArrowScale [Cell].get_units(5), 1);        // print the average of 5 readings from the ADC minus tare weight, divided
-    // by the SCALE parameter set with set_scale
+
     print_dot( );
-    //scale1.power_down();              // put the ADC in sleep mode
 
-
-    delay(500);
+    delay(100);
   }
 
   LastRead = CELLS - 1;
 
   Serial.println("Readings:");
+}
+
+void cell_tare() {
+  print_tare();
+
+  for (int Cell = 0; Cell < CELLS; Cell++)
+  {
+    cell_Tare(Cell);
+  }
+}
+
+void cell_Tare(int Cell) {
+  print_dot();
+  ArrowScale [Cell].tare();
 }
 
 void read_hx711() {
@@ -114,7 +105,7 @@ float ReadArrowScale ()
       Total += Reading [Read][Cell];
   Total = Total / (float) (CELLREADS);
 
- // DEBUG (FUNC, Total);
+  // DEBUG (FUNC, Total);
 
   // return force on scale in grams
   return (Total);
