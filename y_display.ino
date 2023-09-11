@@ -25,18 +25,29 @@ void print_dot( ) {
   display.display();
 }
 
+
+void print_tare() {
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.print("Tara");
+  display.display();
+}
+
 void show_weight( ) {
   display.clearDisplay();
   display.setCursor(0, 0);
-  display.setTextSize(2);             // Normal 2x pixel scale
+  display.setTextSize(1);             // Normal 2x pixel scale
   display.setTextColor(SSD1306_WHITE);        // Draw white text
-  display.println(Reading [LastRead][0]);
-  display.println(Reading [LastRead][1]);
+  display.print(Reading [LastRead][0], 1);
+  display.print(" <--<< ");
+  display.println(Reading [LastRead][1], 1);
+
+  display.setTextSize(2);
   float tot_weight = Reading [LastRead][0] + Reading [LastRead][1];
-  display.println(tot_weight);
+  display.println(tot_weight, 1);
 
   Spine = ConvertForceToSpine (Force, SpineMethodology, false);
-  display.println(Spine);
+  display.println(Spine,0);
 
   display.display();
 }

@@ -8,8 +8,11 @@ void check_button() {
 
   if (button1.fell()) {
     Serial.println("================== Button 1 =================");
+    print_tare();
+
     for (int Cell = 0; Cell < CELLS; Cell++)
     {
+      print_dot();
       ArrowScale [Cell].tare();
     }
   }

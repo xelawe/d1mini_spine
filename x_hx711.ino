@@ -12,6 +12,7 @@
 
 static int CellDOutPin [] = {LOADCELL1_DOUT_PIN, LOADCELL2_DOUT_PIN};
 static int CellSckPin [] = {LOADCELL1_SCK_PIN, LOADCELL2_SCK_PIN};
+static float scale_f [] = { 724.768066, 792.108398 };
 
 static float PeakForce [6] = {0, 0, 0, 0, 0, 0};
 
