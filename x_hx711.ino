@@ -20,3 +20,5 @@ float Reading [CELLREADS][CELLS];
 int LastRead;
 
 HX711 ArrowScale[CELLS];
+
+boolean gv_do_tare = false;

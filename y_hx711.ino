@@ -37,8 +37,6 @@ void init_hx711() {
 }
 
 void cell_tare() {
-  print_tare();
-
   for (int Cell = 0; Cell < CELLS; Cell++)
   {
     cell_Tare(Cell);
@@ -79,6 +77,7 @@ void read_hx711() {
   // DEBUG (FUNC, Reading [LastRead][0], Reading [LastRead][1], tot_weight );
 
   Force = ReadArrowScale ();
+  CoG = ReadArrowCOG ( false );
 }
 
 
@@ -111,3 +110,47 @@ float ReadArrowScale ()
   return (Total);
 
 } /* ArrowSpineClass::ReadArrowScale */
+
+/*******************************************************************************
+*                                                                              *
+*                                  ReadArrowCOG                                *
+*                                                                              *
+*       Gather up the HX711 force history of readings and average them,        *                                 
+*       keeping the force averages for the two gauges separate.  Use the       *
+*       forces on the two gauges to calculate the position of the centre       *
+*       of gravity in millimetres in front of the first gauge.                 *
+*                                                                              *
+*******************************************************************************/
+
+float ReadArrowCOG (bool Mode23Inch)
+{
+  float HalfSupportSpacing = (SUPPORTSPACING28/2);
+  float Total [CELLS];
+  float CoG;
+
+  for (int Cell = 0; Cell < CELLS; Cell++) Total [Cell] = 0;
+
+  // figure out support spacing
+  if (Mode23Inch)
+    HalfSupportSpacing = (SUPPORTSPACING23/2); 
+  
+  // average the cell reading history
+  for (int Cell = 0; Cell < CELLS; Cell++)
+    for (int Read = 0; Read < CELLREADS; Read++)
+      Total [Cell] += Reading [Read][Cell];
+  for (int Cell = 0; Cell < CELLS; Cell++)
+    Total [Cell] = Total [Cell] / (float) (CELLREADS);
+
+  // calculate the centre of gravity distance from support 1
+  if ((Total[1] < 1) || (Total[0] < 1))
+    CoG = 0;
+  else
+    CoG = (((Total[1] - Total[0]) * HalfSupportSpacing) / (Total[1] + Total[0]))
+                                  + HalfSupportSpacing;
+
+  //DEBUG (FUNC, CoG, HalfSupportSpacing);
+
+  // return position of COG in mm from the first support
+  return (CoG);  
+  
+} /* ArrowSpineClass::ReadArrowCOG */

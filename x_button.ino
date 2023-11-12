@@ -1,4 +1,7 @@
-#include <Bounce2.h>
-#define BUTTON1_PIN D3
+#include "w_encoder.h"
 
-Bounce button1 = Bounce(); // Instantiate a Bounce object
+
+const int IntPin = D3; /* Definition of the interrupt pin. You can change according to your board */
+
+
+volatile boolean gv_int_enc;
